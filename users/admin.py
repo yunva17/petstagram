@@ -3,6 +3,6 @@ from . import models
 
 
 @admin.register(models.User)
-class UserAdmin(models.Admin):
+class UserAdmin(admin.ModelAdmin):
     """ UserAdmin Admin """
     pass
