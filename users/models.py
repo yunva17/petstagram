@@ -1,12 +1,19 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
 
-class User(models.Model):
+class User(AbstractUser):
     """ User Model """
-    email = models.CharField(max_length=50, unique=True, null=True)
-    phone = models.CharField(max_length=50, unique=True, null=True)
-    full_name = models.CharField(max_length=50)
-    username = models, models.CharField(max_length=50)
-    password = models.CharField(max_length=300)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    GENDER_MALE = "male"
+    GENDER_FEMALE = "female"
+
+    GENDER_CHOICES = (
+        (GENDER_MALE, "male"),
+        (GENDER_FEMALE, "female"),
+    )
+
+    avatar = models.ImageField(blank=True)
+    phone = models.CharField(max_length=50, blank=True)
+    bio = models.TextField(blank=True)
+    genter = models.CharField(choices=GENDER_CHOICES,
+                              blank=True, max_length=10)
