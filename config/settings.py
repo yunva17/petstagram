@@ -21,6 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'clg#=p)3xto2_8ju=on(fxadnwpf7tok4h4psimx2$r1xy!_dm'
+ALGORITHM = 'HS256'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -38,7 +39,7 @@ DJANGO_APPS = [
     "django.contrib.staticfiles",
 ]
 
-THIRD_PARTY_APPS = ["phonenumbers", ]
+THIRD_PARTY_APPS = ["phonenumbers", "PyJWT", "bcrypt"]
 
 PROJECT_APPS = [
     "core.apps.CoreConfig",

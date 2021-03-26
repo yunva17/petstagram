@@ -8,14 +8,17 @@ class UserAdmin(UserAdmin):
     """ UserAdmin Admin """
 
     fieldsets = UserAdmin.fieldsets+(
-        ("users", {
-            "fields": (
-                "avatar",
-                "bio",
-                "genter",
-
-            ),
-        }),
+        (
+            "users",
+            {
+                "fields": (
+                    "name",
+                    "phone",
+                    "created_at",
+                    "modified_at",
+                )
+            },
+        ),
     )
 
     list_display = ("username",
@@ -23,5 +26,5 @@ class UserAdmin(UserAdmin):
                     "phone",
                     "is_active",
                     "is_staff",
-                    "is_superuser"
+                    "is_superuser",
                     )

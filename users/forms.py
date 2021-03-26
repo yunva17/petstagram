@@ -17,4 +17,8 @@ class LoginForm(forms.Form):
             else:
                 self.add_error("password", forms.ValidationError("비밀번호 틀림"))
         except models.User.DoesNotExist:
-            slef.add_error("email", forms.ValidationError("아이디 존재 안함"))
+            self.add_error("email", forms.ValidationError("아이디 존재 안함"))
+
+
+class SignUpForm(forms.Form):
+    pass

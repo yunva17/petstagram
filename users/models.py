@@ -4,16 +4,8 @@ from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
     """ User Model """
-    GENDER_MALE = "male"
-    GENDER_FEMALE = "female"
 
-    GENDER_CHOICES = (
-        (GENDER_MALE, "male"),
-        (GENDER_FEMALE, "female"),
-    )
-
-    avatar = models.ImageField(blank=True)
-    phone = models.CharField(max_length=50, blank=True)
-    bio = models.TextField(blank=True)
-    genter = models.CharField(choices=GENDER_CHOICES,
-                              blank=True, max_length=10)
+    name = models.CharField(max_length=50)
+    phone = models.CharField(max_length=50, null=True, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    modified_at = models.DateTimeField(auto_now=True)
