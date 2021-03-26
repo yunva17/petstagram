@@ -7,7 +7,7 @@ from django.http import JsonResponse, HttpResponse
 from django.views import View
 from django.db.models import Q
 
-from users.models import User
+from users.models import (User)
 from config.settings import SECRET_KEY, ALGORITHM
 
 email_regex = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
@@ -16,25 +16,25 @@ email_regex = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
 class SignUpView(View):
     def post(self, request):
         data = json.loads(request.body)
-        print(data)
 
         try:
-            email = data['email']
             name = data['name']
+            email = data['email']
             username = data['username']
             password = data['password']
-
-            print('여기?')
 
             if name == "":
                 return JsonResponse({"message": "REQUIRED_NAME"}, status=400)
             if email == "":
                 return JsonResponse({"message": "REQUIRED_PHTON_OR_EMAIL"}, status=400)
-
-            if User.objects.filter(email=email).exist():
+            if username == "":
+                return JsonResponse({"message": "REQUIRED_USERNAME"}, status=400)
+            if password == "":
+                return JsonResponse({"message": "REQUIRED_PASSWORD"}, status=400)
+            if User.objects.filter(email=email).exists():
                 return JsonResponse({"message": "EXISTS_EMAIL"}, status=400)
 
-            if User.objects.filter(username=username).exist():
+            if User.objects.filter(username=username).exists():
                 return JsonResponse({"message": "EXISTS_USERNAME"}, status=400)
 
             if not email_regex.search(email):
@@ -44,7 +44,6 @@ class SignUpView(View):
                 'utf-8'), bcrypt.gensalt()).decode('utf-8')
 
             print(hashed_password)
-
             User.objects.create(
                 name=name,
                 email=email,
@@ -61,20 +60,22 @@ class SignUpView(View):
 class LogInView(View):
     def post(self, request):
         data = json.loads(request.body)
+        print(data)
 
         try:
             email = data.get('email', None)
-            phone = data.get('phone', None)
             username = data.get('username', None)
             password = data.get('password', None)
 
-            if not((email or username or phone) and password):
+            if not((email or username) and password):
                 return JsonResponse({"message": "REQURIED"}, status=400)
 
-            if User.objects.filter(Q(email=email) | Q(phone=phone) | Q(username=username)):
-                user = User.objects.get(Q(email=email) | Q(
-                    phone=phone) | Q(username=username))
-                if bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')):
+            if User.objects.filter(Q(email=email) | Q(username=username)):
+                user = User.objects.get(Q(email=email) | Q(username=username))
+                bytes_input_pw = password.encode(
+                    'utf-8')
+                bytes_db_pw = user.password.encode('utf-8')
+                if bcrypt.checkpw(bytes_input_pw, bytes_db_pw):
                     access_token = jwt.encode(
                         {'user': user.pk}, SECRET_KEY, algorithm=ALGORITHM)
                     return JsonResponse({"message": "SUCCESS", "TOKEN": access_token}, status=200)
