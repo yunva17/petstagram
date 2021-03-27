@@ -15,10 +15,31 @@ class LoginForm(forms.Form):
             if user.check_password(password):
                 return self.cleaned_data
             else:
-                self.add_error("password", forms.ValidationError("비밀번호 틀림"))
+                self.add_error(
+                    "password", forms.ValidationError("PASSWORD IS WRONG"))
         except models.User.DoesNotExist:
-            self.add_error("email", forms.ValidationError("아이디 존재 안함"))
+            self.add_error("email", forms.ValidationError("USER DOESNT EXIST"))
 
 
-class SignUpForm(forms.Form):
-    pass
+class SignUpForm(forms.ModelForm):
+    class Meta:
+        model = models.User
+        fields = ['email', 'name', 'username', 'password']
+
+        widgets = {
+            'password': forms.PasswordInput()
+        }
+
+    def save(self, *args, **kwargs):
+        user = super().save(commit=False)
+        username = self.cleaned_data.get("username")
+        email = self.cleaned_data.get("email")
+        name = self.cleaned_data.get("name")
+        password = self.cleaned_data.get("password")
+
+        user = models.User.objects.create_user(username,
+                                               email,
+                                               name,
+                                               password)
+
+        user.save()
