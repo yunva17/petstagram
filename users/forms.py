@@ -24,7 +24,7 @@ class LoginForm(forms.Form):
 class SignUpForm(forms.ModelForm):
     class Meta:
         model = models.User
-        fields = ['email', 'name', 'username', 'password']
+        fields = ('email', 'name', 'username', 'password')
 
         widgets = {
             'password': forms.PasswordInput()
@@ -36,10 +36,5 @@ class SignUpForm(forms.ModelForm):
         email = self.cleaned_data.get("email")
         name = self.cleaned_data.get("name")
         password = self.cleaned_data.get("password")
-
-        user = models.User.objects.create_user(username,
-                                               email,
-                                               name,
-                                               password)
-
+        user.set_password(password)
         user.save()
